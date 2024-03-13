@@ -61,13 +61,10 @@ class TransactionFragment : Fragment() {
                     currentTransaction.creationTime = time
                 }
                 viewModel.saveTransaction(currentTransaction)
-                viewModel.saved.postValue(false)
 
             }
             Navigation.findNavController(it).popBackStack()
         }
-
-
 
     }
 
