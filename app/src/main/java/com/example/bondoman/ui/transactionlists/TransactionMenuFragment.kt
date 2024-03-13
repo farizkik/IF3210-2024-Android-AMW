@@ -12,10 +12,10 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bondoman.R
 import com.example.bondoman.databinding.FragmentListBinding
-class TransactionMenuFragment : Fragment() {
+class TransactionMenuFragment : Fragment(), ListAction {
 
     private var _binding: FragmentListBinding? = null
-    private val transactionMenuAdapter = TransactionMenuAdapter(arrayListOf())
+    private val transactionMenuAdapter = TransactionMenuAdapter(arrayListOf(), this)
     private lateinit var viewModel: TransactionMenuViewModel
 
     // This property is only valid between onCreateView and
@@ -70,5 +70,9 @@ class TransactionMenuFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onClick(id: Long) {
+        goToTransactionDetails(id)
     }
 }
