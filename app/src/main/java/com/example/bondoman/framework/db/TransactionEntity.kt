@@ -18,7 +18,7 @@ data class TransactionEntity(
     val id: Long = 0L
 ) {
     companion object {
-        fun fromTransaction(transaction: Transaction) = TransactionEntity(transaction.title,transaction.type, transaction.nominal, transaction.creationTime, transaction.location)
+        fun fromTransaction(transaction: Transaction) = TransactionEntity(transaction.title,transaction.type, transaction.nominal, transaction.creationTime, transaction.location, transaction.id)
     }
 
     fun toTransaction() = Transaction(title, type, nominal, creationTime, location, id)
