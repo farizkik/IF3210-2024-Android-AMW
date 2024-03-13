@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.databinding.FragmentTransactionBinding
 
 class TransactionFragment : Fragment() {
+    private var transactionId = 0L
     private val viewModel: TransactionViewModel by viewModels()
     private var currentTransaction = Transaction("", "", 0L, 0L, "")
 
@@ -41,6 +43,13 @@ class TransactionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 //        viewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
+        arguments?.let {
+            transactionId = TransactionFragmentArgs.fromBundle(it).transactionID
+        }
+
+        if(transactionId != 0L){
+            viewModel.getTransaction(transactionId)
+        }
 
         binding.saveButton.setOnClickListener{
             Log.d("Observer", "Observer triggered with success")
@@ -73,6 +82,15 @@ class TransactionFragment : Fragment() {
             }
         }
         )
+
+        viewModel.currentTransaction.observe(viewLifecycleOwner, Observer{transaction->
+            transaction?.let {
+                currentTransaction = it
+                binding.titleView.setText(it.title, TextView.BufferType.EDITABLE)
+                binding.typeView.setText(it.type, TextView.BufferType.EDITABLE)
+            }
+
+        })
     }
 
 }
