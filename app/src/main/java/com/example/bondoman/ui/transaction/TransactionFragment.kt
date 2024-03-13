@@ -93,10 +93,11 @@ class TransactionFragment : Fragment() {
 
         binding.saveButton.setOnClickListener{
             Log.d("Observer", "Observer triggered with success")
-            if(binding.titleView.text.toString() != "" || binding.typeView.text.toString() != "") {
+            if(binding.titleView.text.toString() != "" && binding.typeView.text.toString() != "") {
                 val time:Long = System.currentTimeMillis()
                 currentTransaction.title =binding.titleView.text.toString()
                 currentTransaction.type = binding.typeView.text.toString()
+                currentTransaction.nominal = binding.nominalView.text.toString().toLong()
                 if(currentTransaction.id == 0L){
                     currentTransaction.creationTime = time
                 }
@@ -125,6 +126,7 @@ class TransactionFragment : Fragment() {
                 currentTransaction = it
                 binding.titleView.setText(it.title, TextView.BufferType.EDITABLE)
                 binding.typeView.setText(it.type, TextView.BufferType.EDITABLE)
+                binding.nominalView.setText(it.nominal.toString(), TextView.BufferType.EDITABLE)
             }
 
         })
