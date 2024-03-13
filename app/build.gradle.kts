@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -55,7 +56,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 
-    implementation("androidx.core:core-ktx:+")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -65,6 +65,8 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.5.0")
     // To use Kotlin annotation processing tool (kapt)
     kapt ("androidx.room:room-compiler:2.5.0")
+    implementation ("androidx.room:room-ktx:2.5.0")
+
     // To use Kotlin Symbol Processing (KSP)
     // ksp "androidx.room:room-compiler:$room_version"
     // optional - RxJava2 support for Room
