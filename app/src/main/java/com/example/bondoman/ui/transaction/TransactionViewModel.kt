@@ -30,12 +30,20 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     )
 
     var saved = MutableLiveData<Boolean>()
+    val currentTransaction = MutableLiveData<Transaction?>()
 
     fun saveTransaction(transaction: Transaction) {
         coroutineScope.launch {
             useCases.addTransaction(transaction)
             Log.d("chane", "Observer triggered with yippie")
             saved.postValue(true)
+        }
+    }
+
+    fun getTransaction(id: Long){
+        coroutineScope.launch {
+            val transaction = useCases.getTransaction(id)
+            currentTransaction.postValue(transaction)
         }
     }
 }

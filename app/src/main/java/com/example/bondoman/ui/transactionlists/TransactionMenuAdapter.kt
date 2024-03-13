@@ -9,7 +9,7 @@ import com.example.bondoman.databinding.ItemTransactionBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class TransactionMenuAdapter(var transactions : ArrayList<Transaction>) : RecyclerView.Adapter<TransactionMenuAdapter.TransactionViewHolder>(){
+class TransactionMenuAdapter(var transactions : ArrayList<Transaction>, val action: ListAction) : RecyclerView.Adapter<TransactionMenuAdapter.TransactionViewHolder>(){
 
     inner class TransactionViewHolder(val binding: ItemTransactionBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(get: Transaction){
@@ -19,6 +19,7 @@ class TransactionMenuAdapter(var transactions : ArrayList<Transaction>) : Recycl
             val sdf = SimpleDateFormat("MMM dd, HH:mm:ss")
             val resultDate = Date(get.creationTime)
             binding.date.text = "Created:       ${sdf.format(resultDate)}"
+            binding.transactionLayout.setOnClickListener{action.onClick(get.id)}
         }
 
     }
