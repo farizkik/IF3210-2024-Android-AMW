@@ -1,4 +1,4 @@
-package com.example.bondoman.ui.dashboard
+package com.example.bondoman.ui.transactionlists
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,12 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.bondoman.databinding.FragmentDashboardBinding
-
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.bondoman.R
+import com.example.bondoman.databinding.FragmentListBinding
 class TransactionMenuFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentListBinding? = null
+    private val transactionMenuAdapter = TransactionMenuAdapter(arrayListOf())
+    private lateinit var viewModel: TransactionMenuViewModel
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -21,18 +26,45 @@ class TransactionMenuFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val transactionMenuViewModel =
-            ViewModelProvider(this).get(TransactionMenuViewModel::class.java)
+    ): View? {
+        _binding = FragmentListBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val textView: TextView = binding.textDashboard
-        transactionMenuViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        binding.transactionListView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = transactionMenuAdapter
         }
-        return root
+
+        binding.addTransaction.setOnClickListener{goToTransactionDetails()}
+
+        viewModel = ViewModelProvider(this).get(TransactionMenuViewModel::class.java)
+
+        observeViewModel()
+    }
+
+    fun observeViewModel() {
+        viewModel.transactions.observe(this, Observer {transactionsList->
+            binding.loadingView.visibility = View.GONE
+            binding.transactionListView.visibility = View.VISIBLE
+            transactionMenuAdapter.updateTransactions(transactionsList.sortedBy { it.creationTime })
+
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.getTransactions()
+    }
+
+    private fun goToTransactionDetails(id:Long = 0L){
+        val action = TransactionMenuFragmentDirections.actionGoToTransaction(id)
+        Navigation.findNavController(binding.transactionListView).navigate(action)
     }
 
     override fun onDestroyView() {
