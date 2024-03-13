@@ -26,14 +26,16 @@
         android:name="com.example.bondoman.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
     <fragment
         android:id="@+id/transactionFragment"
         android:name="com.example.bondoman.ui.transaction.TransactionFragment"
-        android:label="fragment_transaction"
+        android:label="Transaction"
         tools:layout="@layout/fragment_transaction" >
         <argument
             android:name="transactionID"
             app:argType="long"
             android:defaultValue="0L" />
     </fragment>
+
 </navigation>

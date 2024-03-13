@@ -46,4 +46,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             currentTransaction.postValue(transaction)
         }
     }
+
+    fun deleteTransaction(transaction: Transaction){
+        coroutineScope.launch {
+            useCases.removeTransaction(transaction)
+            saved.postValue(true)
+        }
+    }
 }
