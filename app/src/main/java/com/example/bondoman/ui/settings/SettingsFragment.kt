@@ -1,16 +1,16 @@
 package com.example.bondoman.ui.settings
 
-import androidx.lifecycle.ViewModelProvider
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.example.bondoman.R
-import com.example.bondoman.databinding.FragmentNotificationsBinding
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.bondoman.databinding.FragmentSettingsBinding
-import com.example.bondoman.ui.notifications.NotificationsViewModel
+
 
 class SettingsFragment : Fragment() {
 
@@ -36,6 +36,16 @@ class SettingsFragment : Fragment() {
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.button.setOnClickListener{
+            val intent = Intent("com.example.bondoman.action")
+            intent.putExtra("message", "hello")
+            requireContext().sendBroadcast(intent)
+            Log.d("intent send", "ok")
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
