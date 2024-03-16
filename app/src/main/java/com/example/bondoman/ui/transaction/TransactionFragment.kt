@@ -2,7 +2,9 @@ package com.example.bondoman.ui.transaction
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -10,6 +12,7 @@ import android.location.Geocoder.GeocodeListener
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,6 +37,7 @@ import com.example.bondoman.R
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.databinding.FragmentTransactionBinding
 
+
 class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
     private var transactionId = 0L
     private val viewModel: TransactionViewModel by viewModels()
@@ -44,6 +48,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var curLocation : Location
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,9 +123,23 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
             }
             Navigation.findNavController(it).popBackStack()
         }
+        binding.mapsButton.setOnClickListener{
+            if(this::curLocation.isInitialized)
+                openMapsIntent(curLocation.latitude, curLocation.longitude)
+        }
 
     }
 
+    // on below line creating an open maps intent method.
+    private fun openMapsIntent(lat: Double, lng: Double) {
+        val gmmIntentUri = Uri.parse("google.com/maps/place/${lat.toString()},${lng.toString()}")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+//        mapIntent.setPackage("com.google.android.apps.maps")
+//        mapIntent.resolveActivity(requireActivity().packageManager)?.let {
+//            Log.d("aa", " triggered")
+            startActivity(mapIntent)
+//        }
+    }
     private fun observeViewModel(){
         viewModel.saved.observe(viewLifecycleOwner, Observer<Boolean> {it->
             Log.d("Observer", "Observer triggered with yippie")
@@ -184,6 +203,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
 
 
     override fun onLocationChanged(location: Location) {
+        curLocation = location
         tvGpsLocation = binding.locationView
         geocoder.getFromLocation(location.latitude,location.longitude,1, this)
     }
