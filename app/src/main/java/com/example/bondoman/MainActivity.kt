@@ -1,6 +1,9 @@
 package com.example.bondoman
 
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -8,11 +11,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bondoman.databinding.ActivityMainBinding
+import com.example.bondoman.receiver.MyBroadcastListener
+import com.example.bondoman.receiver.MyBroadcastReceiver
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MyBroadcastListener {
 
     private lateinit var binding: ActivityMainBinding
-
+    private lateinit var receiver: BroadcastReceiver
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,5 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+    }
+
+    override fun onBroadcastReceived(value: String?) {
+        Log.d("adsadas", "asdasd")
     }
 }

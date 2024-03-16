@@ -64,6 +64,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
         observeViewModel()
         getLocation()
         geocoder = Geocoder(requireContext())
+
         return view
     }
 
