@@ -1,27 +1,32 @@
 package com.example.bondoman.ui.transactionlists
 
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bondoman.R
 import com.example.bondoman.databinding.FragmentListBinding
-class TransactionMenuFragment : Fragment(), ListAction {
+import com.example.bondoman.receiver.MyBroadcastListener
+import com.example.bondoman.receiver.MyBroadcastReceiver
+
+
+class TransactionMenuFragment : Fragment(), ListAction, MyBroadcastListener {
 
     private var _binding: FragmentListBinding? = null
     private val transactionMenuAdapter = TransactionMenuAdapter(arrayListOf(), this)
     private lateinit var viewModel: TransactionMenuViewModel
+    private var toggle: Boolean = false
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +53,7 @@ class TransactionMenuFragment : Fragment(), ListAction {
     }
 
     fun observeViewModel() {
-        viewModel.transactions.observe(this, Observer {transactionsList->
+        viewModel.transactions.observe(viewLifecycleOwner, Observer {transactionsList->
             binding.loadingView.visibility = View.GONE
             binding.transactionListView.visibility = View.VISIBLE
             transactionMenuAdapter.updateTransactions(transactionsList.sortedBy { it.creationTime })
@@ -74,5 +79,20 @@ class TransactionMenuFragment : Fragment(), ListAction {
 
     override fun onClick(id: Long) {
         goToTransactionDetails(id)
+    }
+
+    private lateinit var receiver: BroadcastReceiver
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        receiver = MyBroadcastReceiver(this)
+        val intentFilter = IntentFilter("com.example.bondoman.action")
+        requireActivity().registerReceiver(receiver, intentFilter)
+    }
+    override fun onBroadcastReceived(value: String?) {
+        Log.d("adsadas", "asdasd")
+        toggle=true
     }
 }
