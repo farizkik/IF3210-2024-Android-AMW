@@ -4,6 +4,9 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
+import android.location.Geocoder.GeocodeListener
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -31,7 +34,7 @@ import com.example.bondoman.R
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.databinding.FragmentTransactionBinding
 
-class TransactionFragment : Fragment(), LocationListener {
+class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
     private var transactionId = 0L
     private val viewModel: TransactionViewModel by viewModels()
     private var currentTransaction = Transaction("", "", 0L, 0L, "")
@@ -55,6 +58,7 @@ class TransactionFragment : Fragment(), LocationListener {
         val view = binding.root
         observeViewModel()
         getLocation()
+        geocoder = Geocoder(requireContext())
         return view
     }
 
@@ -181,7 +185,7 @@ class TransactionFragment : Fragment(), LocationListener {
 
     override fun onLocationChanged(location: Location) {
         tvGpsLocation = binding.locationView
-        tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
+        geocoder.getFromLocation(location.latitude,location.longitude,1, this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -193,6 +197,13 @@ class TransactionFragment : Fragment(), LocationListener {
                 Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    // geocode stuff
+
+    private lateinit var geocoder: Geocoder
+    override fun onGeocode(p0: MutableList<Address>) {
+        tvGpsLocation.text = p0[0].getAddressLine(0).toString()
     }
 
 
