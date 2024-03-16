@@ -18,7 +18,6 @@ abstract class DatabaseService: RoomDatabase() {
                 .fallbackToDestructiveMigration()
                 .build()
 
-
         fun getInstance(context: Context): DatabaseService =
             (instance ?: create(context)).also { instance = it }
     }

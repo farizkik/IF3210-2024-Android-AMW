@@ -1,10 +1,14 @@
 package com.example.bondoman.ui.transaction
 
+import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,18 +17,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.bondoman.R
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.databinding.FragmentTransactionBinding
 
-class TransactionFragment : Fragment() {
+class TransactionFragment : Fragment(), LocationListener {
     private var transactionId = 0L
     private val viewModel: TransactionViewModel by viewModels()
     private var currentTransaction = Transaction("", "", 0L, 0L, "")
@@ -47,6 +54,7 @@ class TransactionFragment : Fragment() {
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         val view = binding.root
         observeViewModel()
+        getLocation()
         return view
     }
 
@@ -131,5 +139,61 @@ class TransactionFragment : Fragment() {
 
         })
     }
+
+    // location stuff
+    private lateinit var locationManager: LocationManager
+    private lateinit var tvGpsLocation: TextView
+    private val locationPermissionCode = 2
+
+    private fun getLocation() {
+        locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "Permission Granted lol?", Toast.LENGTH_SHORT).show()
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+        } else {
+            Log.d("ples]aes","request pleasesaesee")
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+            Log.d("where","why not here")
+
+            val locationPermissionRequest = registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { permissions ->
+                when {
+                    permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                        // Precise location access granted.
+                        Toast.makeText(context, "yippie!!!", Toast.LENGTH_SHORT).show()
+                    }
+                    permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                        // Only approximate location access granted.
+                    } else -> {
+                    // No location access granted.
+                    Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+                }
+                }
+            }
+        }
+
+    }
+
+
+    override fun onLocationChanged(location: Location) {
+        tvGpsLocation = binding.locationView
+        tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == locationPermissionCode) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
 }
