@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -13,16 +14,26 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.bondoman.databinding.ActivityMainBinding
 import com.example.bondoman.receiver.MyBroadcastListener
 import com.example.bondoman.receiver.MyBroadcastReceiver
+import com.example.bondoman.service.ConnectivityObserver
+import com.example.bondoman.service.NetworkConnectivityObserver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), MyBroadcastListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var receiver: BroadcastReceiver
+    private lateinit var  connectivityObserver: ConnectivityObserver
+    private var alertDialog: AlertDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        connectivityObserver = NetworkConnectivityObserver(applicationContext)
 
         val navView: BottomNavigationView = binding.navView
 
@@ -38,6 +49,39 @@ class MainActivity : AppCompatActivity(), MyBroadcastListener {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        observeConnectivity()
+    }
+
+    private fun observeConnectivity() {
+        val scope = CoroutineScope(Dispatchers.Main)
+
+        scope.launch {
+            connectivityObserver.observe().collect { status ->
+                if (status == ConnectivityObserver.Status.Unavailable || status == ConnectivityObserver.Status.Lost) {
+                    showNoInternetPopUp()
+                } else {
+                    hideNoInternetPopup()
+                }
+            }
+        }
+    }
+
+    private fun showNoInternetPopUp() {
+        if (alertDialog == null) {
+            alertDialog = AlertDialog.Builder(this)
+                .setTitle("No Internet Connection")
+                .setMessage("Please check your internet connection and try again.")
+                .setCancelable(false)
+                .setPositiveButton("OK") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+    }
+
+    private fun hideNoInternetPopup() {
+        alertDialog?.dismiss()
+        alertDialog = null
     }
 
     override fun onBroadcastReceived(value: String?) {
