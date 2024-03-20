@@ -2,22 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center">
 
     <LinearLayout
         android:id="@+id/network_offline_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal"
         android:padding="16dp">
 
-
         <ImageView
             android:id="@+id/image_wifi_connection"
-            android:layout_width="34dp"
-            android:layout_height="41dp"
+            android:layout_width="54dp"
+            android:layout_height="53dp"
             android:contentDescription="@string/network_offline_image_description"
             app:srcCompat="@drawable/ic_baseline_wifi_off_24" />
 
@@ -25,7 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="16dp">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <TextView
                 android:id="@+id/network_offline_title"
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/network_offline_title"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/network_offline_subtitle"
@@ -41,8 +41,18 @@
                 android:layout_height="wrap_content"
                 android:text="@string/network_offline_subtitle"
                 android:textColor="@color/dark_gray"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
+
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/retry_network_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/network_offline_fragment"
+        android:layout_centerHorizontal="true"
+        android:text="@string/network_retry_button" />
 </RelativeLayout>
