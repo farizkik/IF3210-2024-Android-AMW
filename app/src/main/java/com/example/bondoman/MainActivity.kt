@@ -17,6 +17,7 @@ import com.example.bondoman.receiver.MyBroadcastListener
 import com.example.bondoman.receiver.MyBroadcastReceiver
 import com.example.bondoman.service.ConnectivityObserver
 import com.example.bondoman.service.NetworkConnectivityObserver
+import com.example.bondoman.ui.network.NetworkOfflineFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -35,9 +36,6 @@ class MainActivity : AppCompatActivity(), MyBroadcastListener {
         setContentView(binding.root)
 
         connectivityObserver = NetworkConnectivityObserver(applicationContext)
-        lifecycleScope.launch {
-            observeConnectivity()
-        }
 
         val navView: BottomNavigationView = binding.navView
 
@@ -52,6 +50,13 @@ class MainActivity : AppCompatActivity(), MyBroadcastListener {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launch {
+            observeConnectivity()
+        }
     }
 
     private fun observeConnectivity() {
