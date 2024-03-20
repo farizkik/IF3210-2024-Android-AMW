@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -34,6 +35,9 @@ class MainActivity : AppCompatActivity(), MyBroadcastListener {
         setContentView(binding.root)
 
         connectivityObserver = NetworkConnectivityObserver(applicationContext)
+        lifecycleScope.launch {
+            observeConnectivity()
+        }
 
         val navView: BottomNavigationView = binding.navView
 
@@ -48,13 +52,10 @@ class MainActivity : AppCompatActivity(), MyBroadcastListener {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        observeConnectivity()
     }
 
     private fun observeConnectivity() {
         val scope = CoroutineScope(Dispatchers.Main)
-
         scope.launch {
             connectivityObserver.observe().collect { status ->
                 if (status == ConnectivityObserver.Status.Unavailable || status == ConnectivityObserver.Status.Lost) {
