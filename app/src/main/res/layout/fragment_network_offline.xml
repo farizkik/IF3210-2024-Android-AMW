@@ -5,14 +5,6 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <LinearLayout
-        android:id="@+id/network_offline_fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
         <ImageView
             android:id="@+id/image_wifi_connection"
             android:layout_width="54dp"
@@ -25,7 +17,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:layout_toEndOf="@+id/image_wifi_connection">
 
             <TextView
                 android:id="@+id/network_offline_title"
@@ -44,15 +37,4 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
-
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/retry_network_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/network_offline_fragment"
-        android:layout_centerHorizontal="true"
-        android:text="@string/network_retry_button" />
 </RelativeLayout>
