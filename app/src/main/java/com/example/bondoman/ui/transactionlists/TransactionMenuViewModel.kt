@@ -2,15 +2,14 @@ package com.example.bondoman.ui.transactionlists
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.core.repository.TransactionRepository
 import com.example.bondoman.core.usecase.AddTransaction
 import com.example.bondoman.core.usecase.GetAllTransaction
 import com.example.bondoman.core.usecase.GetTransaction
 import com.example.bondoman.core.usecase.RemoveTransaction
+import com.example.bondoman.core.usecase.GetTransactionTypeCount
 import com.example.bondoman.framework.RoomTransactionDataSource
 import com.example.bondoman.framework.UseCases
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +26,8 @@ class TransactionMenuViewModel(application: Application) : AndroidViewModel(appl
         AddTransaction(repository),
         GetTransaction(repository),
         GetAllTransaction(repository),
-        RemoveTransaction(repository)
+        RemoveTransaction(repository),
+        GetTransactionTypeCount(repository),
     )
 
     val transactions = MutableLiveData<List<Transaction>>()
