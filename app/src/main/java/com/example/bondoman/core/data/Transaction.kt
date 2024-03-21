@@ -1,4 +1,5 @@
 package com.example.bondoman.core.data
+
 data class Transaction (
     var title: String,
     var type: String,
