@@ -15,7 +15,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -75,4 +75,6 @@ dependencies {
     implementation ("androidx.room:room-guava:2.5.0")
     testImplementation ("androidx.room:room-testing:2.5.0")
     implementation ("androidx.room:room-paging:2.5.0")
+    implementation ("com.github.AnyChart:AnyChart-Android:1.1.5")
+    implementation ("androidx.multidex:multidex:2.0.1")
 }
