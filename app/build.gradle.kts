@@ -77,4 +77,16 @@ dependencies {
     implementation ("androidx.room:room-paging:2.5.0")
     implementation ("com.github.AnyChart:AnyChart-Android:1.1.5")
     implementation ("androidx.multidex:multidex:2.0.1")
+
+    // To use Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
+
+    // To use moshi
+    implementation ("com.squareup.moshi:moshi:1.15.0")
+    implementation ("com.squareup.moshi:moshi-kotlin:1.15.0")
+    implementation ("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+
+    // To use dotenv
+    implementation ("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }
