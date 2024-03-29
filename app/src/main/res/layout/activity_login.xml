@@ -7,46 +7,78 @@
     tools:context=".ui.login.LoginActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="294dp"
+        android:layout_height="430dp"
+        android:gravity="center"
         android:orientation="vertical"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center"
-        android:padding="20dp"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login"
-            tools:layout_editor_absoluteX="176dp"
-            tools:layout_editor_absoluteY="222dp"
             android:layout_marginBottom="50dp"
-            android:textSize="30sp"/>
+            android:text="@string/login"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="176dp"
+            tools:layout_editor_absoluteY="222dp" />
 
-        <EditText
-            android:id="@+id/editTextTextPassword"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword"
-            tools:layout_editor_absoluteX="100dp"
-            tools:layout_editor_absoluteY="365dp"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editTextTextEmailAddress"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/loginEmailLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/login_email_label"
+                android:textSize="15sp"
+                tools:layout_editor_absoluteX="176dp"
+                tools:layout_editor_absoluteY="222dp" />
+
+            <EditText
+                android:id="@+id/editTextTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:ems="10"
+                android:inputType="textPassword"
+                tools:layout_editor_absoluteX="100dp"
+                tools:layout_editor_absoluteY="365dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            tools:layout_editor_absoluteX="100dp"
-            tools:layout_editor_absoluteY="279dp"
-            android:layout_marginBottom="20dp"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/loginPasswordLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/login_password_label"
+                android:textSize="15sp"
+                tools:layout_editor_absoluteX="176dp"
+                tools:layout_editor_absoluteY="222dp" />
+
+            <EditText
+                android:id="@+id/editTextTextEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                tools:layout_editor_absoluteX="100dp"
+                tools:layout_editor_absoluteY="279dp" />
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/button2"
