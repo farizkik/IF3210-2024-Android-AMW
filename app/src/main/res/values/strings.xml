@@ -11,4 +11,6 @@
     <string name="network_offline_image_description">Network Offline Image</string>
     <string name="network_retry_button">Retry</string>
     <string name="login">Login</string>
+    <string name="login_email_label">Email</string>
+    <string name="login_password_label">Password</string>
 </resources>
