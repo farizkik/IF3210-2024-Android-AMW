@@ -10,4 +10,5 @@
     <string name="network_offline_subtitle">Please Reconnect to Internet</string>
     <string name="network_offline_image_description">Network Offline Image</string>
     <string name="network_retry_button">Retry</string>
+    <string name="login">Login</string>
 </resources>
