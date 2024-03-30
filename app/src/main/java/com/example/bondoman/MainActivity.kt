@@ -2,7 +2,6 @@ package com.example.bondoman
 
 import android.content.BroadcastReceiver
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
@@ -15,15 +14,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bondoman.databinding.ActivityMainBinding
 import com.example.bondoman.receiver.MyBroadcastListener
-import com.example.bondoman.receiver.MyBroadcastReceiver
-import com.example.bondoman.service.ConnectivityObserver
-import com.example.bondoman.service.NetworkConnectivityObserver
+import com.example.bondoman.network.ConnectivityObserver
+import com.example.bondoman.network.NetworkConnectivityObserver
 import com.example.bondoman.share_preference.PreferenceManager
 import com.example.bondoman.ui.login.LoginActivity
-import com.example.bondoman.ui.network.NetworkOfflineFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), MyBroadcastListener {
