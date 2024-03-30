@@ -4,5 +4,5 @@ import io.github.cdimascio.dotenv.dotenv
 val dotenv = dotenv()
 
 object Constant {
-    val BASE_URL = dotenv["BASE_URL"]
+    val BASE_URL = "https://pbd-backend-2024.vercel.app/"
 }

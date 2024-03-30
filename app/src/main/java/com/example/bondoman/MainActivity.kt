@@ -1,6 +1,7 @@
 package com.example.bondoman
 
 import android.content.BroadcastReceiver
+import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,8 @@ import com.example.bondoman.receiver.MyBroadcastListener
 import com.example.bondoman.receiver.MyBroadcastReceiver
 import com.example.bondoman.service.ConnectivityObserver
 import com.example.bondoman.service.NetworkConnectivityObserver
+import com.example.bondoman.share_preference.PreferenceManager
+import com.example.bondoman.ui.login.LoginActivity
 import com.example.bondoman.ui.network.NetworkOfflineFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity(), MyBroadcastListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var receiver: BroadcastReceiver
     private lateinit var  connectivityObserver: ConnectivityObserver
+    private lateinit var preferenceManager: PreferenceManager
     private var alertDialog: AlertDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +40,13 @@ class MainActivity : AppCompatActivity(), MyBroadcastListener {
         setContentView(binding.root)
 
         connectivityObserver = NetworkConnectivityObserver(applicationContext)
+
+        preferenceManager = PreferenceManager(this)
+
+        if (preferenceManager.getToken().isNullOrEmpty()) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
 
         val navView: BottomNavigationView = binding.navView
 
