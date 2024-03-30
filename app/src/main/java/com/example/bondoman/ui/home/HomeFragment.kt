@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.bondoman.R
 import com.example.bondoman.databinding.FragmentHomeBinding
-import com.example.bondoman.service.ConnectivityObserver
-import com.example.bondoman.service.NetworkConnectivityObserver
+import com.example.bondoman.network.ConnectivityObserver
+import com.example.bondoman.network.NetworkConnectivityObserver
 import com.example.bondoman.ui.network.NetworkOfflineFragment
 import kotlinx.coroutines.launch
 
