@@ -1,4 +1,4 @@
-package com.example.bondoman.service
+package com.example.bondoman.network
 
 import kotlinx.coroutines.flow.Flow
 

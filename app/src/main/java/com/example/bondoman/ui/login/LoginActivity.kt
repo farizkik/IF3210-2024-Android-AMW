@@ -10,11 +10,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.bondoman.MainActivity
-import com.example.bondoman.R
 import com.example.bondoman.api.auth.login.dto.LoginRequest
 import com.example.bondoman.databinding.ActivityLoginBinding
-import com.example.bondoman.service.ConnectivityObserver
-import com.example.bondoman.service.NetworkConnectivityObserver
+import com.example.bondoman.network.ConnectivityObserver
+import com.example.bondoman.network.NetworkConnectivityObserver
+import com.example.bondoman.service.auth.TokenExpService
 import com.example.bondoman.share_preference.PreferenceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -78,6 +78,11 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginResponse.observe(this, Observer { res ->
             Log.d("Login", res.toString())
             preferenceManager.setToken(res.token)
+
+            Intent(applicationContext, TokenExpService::class.java).also {
+                it.action = TokenExpService.Actions.START.toString()
+                startService(it)
+            }
 
             Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
