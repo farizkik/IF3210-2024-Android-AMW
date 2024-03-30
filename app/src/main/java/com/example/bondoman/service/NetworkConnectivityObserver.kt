@@ -57,4 +57,10 @@ class NetworkConnectivityObserver (
             }
         }.distinctUntilChanged()
     }
+    override fun isConnected(): Boolean {
+        val network = connectivityManager.activeNetwork
+        val capabilities = connectivityManager.getNetworkCapabilities(network)
+        return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
 }
