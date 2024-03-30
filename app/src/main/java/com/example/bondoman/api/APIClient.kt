@@ -1,5 +1,6 @@
 package com.example.bondoman.api.auth
 
+import android.util.Log
 import com.example.bondoman.api.auth.login.LoginService
 import com.example.bondoman.common.Constant
 import com.squareup.moshi.Moshi
@@ -8,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object APIClient {
-    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    internal val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val retrofit: Retrofit by lazy { Retrofit.Builder().baseUrl(Constant.BASE_URL).addConverterFactory(
         MoshiConverterFactory.create(moshi)).build() }

@@ -43,14 +43,14 @@
                 tools:layout_editor_absoluteY="222dp" />
 
             <EditText
-                android:id="@+id/editTextTextPassword"
+                android:id="@+id/editTextTextEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="20dp"
                 android:ems="10"
-                android:inputType="textPassword"
+                android:inputType="textEmailAddress"
                 tools:layout_editor_absoluteX="100dp"
-                tools:layout_editor_absoluteY="365dp" />
+                tools:layout_editor_absoluteY="279dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -69,14 +69,14 @@
                 tools:layout_editor_absoluteY="222dp" />
 
             <EditText
-                android:id="@+id/editTextTextEmailAddress"
+                android:id="@+id/editTextTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="8dp"
                 android:ems="10"
-                android:inputType="textEmailAddress"
+                android:inputType="textPassword"
                 tools:layout_editor_absoluteX="100dp"
-                tools:layout_editor_absoluteY="279dp" />
+                tools:layout_editor_absoluteY="365dp" />
         </LinearLayout>
 
 
