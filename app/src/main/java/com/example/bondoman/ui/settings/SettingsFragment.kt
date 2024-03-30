@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bondoman.MainActivity
 import com.example.bondoman.databinding.FragmentSettingsBinding
+import com.example.bondoman.service.auth.TokenExpService
 import com.example.bondoman.share_preference.PreferenceManager
 import com.example.bondoman.ui.login.LoginActivity
 
@@ -57,6 +58,10 @@ class SettingsFragment : Fragment() {
 
         binding.logoutButton.setOnClickListener {
             preferenceManager.removePref()
+            Intent(requireContext(), TokenExpService::class.java).also {
+                it.action = TokenExpService.Actions.STOP.toString()
+                requireContext().startService(it)
+            }
             Toast.makeText(context, "Logout Successful", Toast.LENGTH_SHORT).show()
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             requireActivity().finish()
