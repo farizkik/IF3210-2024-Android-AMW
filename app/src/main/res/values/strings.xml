@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">BondoMan</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -12,5 +12,7 @@
     <string name="network_retry_button">Retry</string>
     <string name="login">Login</string>
     <string name="login_email_label">Email</string>
+    <string name="signout">Logout</string>
     <string name="login_password_label">Password</string>
+
 </resources>
