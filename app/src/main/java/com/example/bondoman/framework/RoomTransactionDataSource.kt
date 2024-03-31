@@ -21,8 +21,8 @@ class RoomTransactionDataSource(context: Context) : TransactionDataSource {
     private suspend fun seedDatabase(context: Context) {
         if (transactionDao.getAllTransactionEntities().isEmpty()) {
             val transactions = listOf(
-                TransactionEntity("Transaction 1", TRANSACTION_TYPE.PEMASUKAN, 100, System.currentTimeMillis(), "Location 1"),
-                TransactionEntity("Transaction 2", TRANSACTION_TYPE.PEMBELIAN, 200, System.currentTimeMillis(), "Location 2")
+                TransactionEntity("Transaction 1", TRANSACTION_TYPE.PEMASUKAN, 100, System.currentTimeMillis(), "Location 1",0.0,0.0, ),
+                TransactionEntity("Transaction 2", TRANSACTION_TYPE.PEMBELIAN, 200, System.currentTimeMillis(), "Location 2", 0.0 , 0.0)
             )
 
             transactions.forEach { transaction ->

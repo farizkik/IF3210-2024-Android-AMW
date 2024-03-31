@@ -16,6 +16,8 @@ data class TransactionEntity(
     @ColumnInfo(name = "creation_time")
     val creationTime: Long,
     val location: String,
+    val latitude: Double,
+    val longitude: Double,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L
 ) {
@@ -27,6 +29,8 @@ data class TransactionEntity(
                 nominal = transaction.nominal,
                 creationTime = transaction.creationTime,
                 location = transaction.location,
+                latitude = transaction.latitude,
+                longitude = transaction.longitude,
                 id = transaction.id
             )
 
@@ -37,5 +41,5 @@ data class TransactionEntity(
         }
     }
 
-    fun toTransaction() = Transaction(title, type.name, nominal, creationTime, location, id)
+    fun toTransaction() = Transaction(title, type.name, nominal, creationTime, location, latitude, longitude, id)
 }
