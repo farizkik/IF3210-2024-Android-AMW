@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+
 }
 
 android {
@@ -91,12 +92,13 @@ dependencies {
     implementation ("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
     // Use camera
+    implementation("com.google.guava:guava:31.0.1-android")
+
     val cameraXVersion = "1.3.2"
     implementation("androidx.camera:camera-core:${cameraXVersion}")
     implementation("androidx.camera:camera-camera2:${cameraXVersion}")
     implementation("androidx.camera:camera-lifecycle:${cameraXVersion}")
     implementation("androidx.camera:camera-video:${cameraXVersion}")
-
     implementation("androidx.camera:camera-view:${cameraXVersion}")
     implementation("androidx.camera:camera-extensions:${cameraXVersion}")
 }
