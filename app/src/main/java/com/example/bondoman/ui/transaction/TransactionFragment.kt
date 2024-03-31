@@ -36,6 +36,7 @@ import androidx.navigation.Navigation
 import com.example.bondoman.R
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.databinding.FragmentTransactionBinding
+import com.example.bondoman.lib.transaction.TRANSACTION_TYPE
 
 
 class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
@@ -62,7 +63,8 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         val view = binding.root
         observeViewModel()
-        getLocation()
+//        getLocation()
+        getRequest()
         geocoder = Geocoder(requireContext())
 
         return view
@@ -108,13 +110,22 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
         if(transactionId != 0L){
             viewModel.getTransaction(transactionId)
         }
+        binding.updateLocationButton.setOnClickListener{
+            getLocation()
+        }
+        binding.pemasukanButton.setChecked(true)
 
+        binding.pemasukanButton.setOnClickListener{
+            currentTransaction.type = TRANSACTION_TYPE.PEMASUKAN.toString()
+        }
+        binding.pengeluaranButton.setOnClickListener {
+            currentTransaction.type = TRANSACTION_TYPE.PEMBELIAN.toString()
+        }
         binding.saveButton.setOnClickListener{
             Log.d("Observer", "Observer triggered with success")
-            if(binding.titleView.text.toString() != "" && binding.typeView.text.toString() != "") {
+            if(binding.titleView.text.toString() != "" && binding.nominalView.text.toString() != "") {
                 val time:Long = System.currentTimeMillis()
                 currentTransaction.title =binding.titleView.text.toString()
-                currentTransaction.type = binding.typeView.text.toString()
                 currentTransaction.nominal = binding.nominalView.text.toString().toLong()
                 if(currentTransaction.id == 0L){
                     currentTransaction.creationTime = time
@@ -133,7 +144,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
 
     // on below line creating an open maps intent method.
     private fun openMapsIntent(lat: Double, lng: Double) {
-        val gmmIntentUri = Uri.parse("google.com/maps/place/${lat.toString()},${lng.toString()}")
+        val gmmIntentUri = Uri.parse("http://www.google.com/maps/place/${lat.toString()},${lng.toString()}")
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
 //        mapIntent.setPackage("com.google.android.apps.maps")
 //        mapIntent.resolveActivity(requireActivity().packageManager)?.let {
@@ -157,7 +168,13 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
             transaction?.let {
                 currentTransaction = it
                 binding.titleView.setText(it.title, TextView.BufferType.EDITABLE)
-                binding.typeView.setText(it.type, TextView.BufferType.EDITABLE)
+                if(it.type == TRANSACTION_TYPE.PEMASUKAN.toString()){
+                    binding.pemasukanButton.setChecked(true)
+                }
+                if(it.type == TRANSACTION_TYPE.PEMBELIAN.toString()){
+                    binding.pengeluaranButton.setChecked(true)
+                }
+
                 binding.nominalView.setText(it.nominal.toString(), TextView.BufferType.EDITABLE)
             }
 
@@ -169,14 +186,14 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
     private lateinit var tvGpsLocation: TextView
     private val locationPermissionCode = 2
 
-    private fun getLocation() {
+    private fun getRequest(){
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(context, "Permission Granted lol?", Toast.LENGTH_SHORT).show()
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
         } else {
             Log.d("ples]aes","request pleasesaesee")
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
@@ -198,6 +215,18 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
                 }
                 }
             }
+        }
+    }
+    private fun getLocation() {
+//        locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "Permission Granted lol?", Toast.LENGTH_SHORT).show()
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+        } else {
+
         }
 
     }
