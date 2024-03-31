@@ -18,6 +18,7 @@
         tools:layout="@layout/fragment_list" >
         <action
             android:id="@+id/actionGoToTransaction"
+
             app:destination="@id/transactionFragment" />
     </fragment>
 
@@ -36,6 +37,10 @@
             android:name="transactionID"
             app:argType="long"
             android:defaultValue="0L" />
+        <argument
+            android:name="randomTitle"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
     <fragment
         android:id="@+id/navigation_settings"

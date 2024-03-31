@@ -47,7 +47,13 @@ class TransactionMenuFragment : Fragment(), ListAction, MyBroadcastListener {
             adapter = transactionMenuAdapter
         }
 
-        binding.addTransaction.setOnClickListener{goToTransactionDetails()}
+        binding.addTransaction.setOnClickListener{
+            if(toggle) {
+                goToTransactionDetails(0L, "Random")
+                toggle = false
+            }
+                else
+            goToTransactionDetails()}
 
         viewModel = ViewModelProvider(this).get(TransactionMenuViewModel::class.java)
 
@@ -69,8 +75,8 @@ class TransactionMenuFragment : Fragment(), ListAction, MyBroadcastListener {
         viewModel.getTransactions()
     }
 
-    private fun goToTransactionDetails(id:Long = 0L){
-        val action = TransactionMenuFragmentDirections.actionGoToTransaction(id)
+    private fun goToTransactionDetails(id:Long = 0L, rand:String = ""){
+        val action = TransactionMenuFragmentDirections.actionGoToTransaction(id,rand)
         Navigation.findNavController(binding.transactionListView).navigate(action)
     }
 
