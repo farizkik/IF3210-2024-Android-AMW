@@ -1,7 +1,7 @@
 package com.example.bondoman.core.repository.auth.token
 
 import android.util.Log
-import com.example.bondoman.api.auth.APIClient
+import com.example.bondoman.api.APIClient
 import com.example.bondoman.api.auth.token.dto.TokenResponse
 import com.example.bondoman.common.response.ResponseContract
 import kotlinx.coroutines.Dispatchers

@@ -1,8 +1,22 @@
 package com.example.bondoman.common
+import android.util.Log
 import io.github.cdimascio.dotenv.dotenv
 
-val dotenv = dotenv()
 
 object Constant {
-    val BASE_URL = "https://pbd-backend-2024.vercel.app/"
+    lateinit var BASE_URL: String
+    init {
+        try {
+            Log.d("Constant", "this is message")
+            val dotenv = dotenv {
+                directory = "/assets"
+                filename = "env"
+            }
+            Log.d("Constant", "this is dotenv $dotenv")
+            BASE_URL = dotenv["BASE_URL"] ?: ""
+        } catch (e: Exception) {
+            e.printStackTrace()
+            BASE_URL = ""
+        }
+    }
 }
