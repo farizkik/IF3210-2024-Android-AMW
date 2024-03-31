@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.bondoman"
-        minSdk = 33
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -89,4 +89,14 @@ dependencies {
 
     // To use dotenv
     implementation ("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+    // Use camera
+    val cameraXVersion = "1.3.2"
+    implementation("androidx.camera:camera-core:${cameraXVersion}")
+    implementation("androidx.camera:camera-camera2:${cameraXVersion}")
+    implementation("androidx.camera:camera-lifecycle:${cameraXVersion}")
+    implementation("androidx.camera:camera-video:${cameraXVersion}")
+
+    implementation("androidx.camera:camera-view:${cameraXVersion}")
+    implementation("androidx.camera:camera-extensions:${cameraXVersion}")
 }
