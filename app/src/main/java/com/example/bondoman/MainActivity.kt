@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -13,11 +12,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bondoman.databinding.ActivityMainBinding
-import com.example.bondoman.receiver.MyBroadcastListener
 import com.example.bondoman.network.ConnectivityObserver
 import com.example.bondoman.network.NetworkConnectivityObserver
+import com.example.bondoman.receiver.MyBroadcastListener
 import com.example.bondoman.share_preference.PreferenceManager
 import com.example.bondoman.ui.login.LoginActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), MyBroadcastListener {
     }
 
     private fun showNoInternetPopUp() {
-        if (alertDialog == null) {
+        if (!isFinishing && alertDialog == null) {
             alertDialog = AlertDialog.Builder(this)
                 .setTitle("No Internet Connection")
                 .setMessage("Please check your internet connection and try again.")
