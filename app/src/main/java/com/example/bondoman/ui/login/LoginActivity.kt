@@ -1,11 +1,11 @@
 package com.example.bondoman.ui.login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -126,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showNoInternetPopUp() {
-        if (alertDialog == null) {
+        if (!isFinishing && alertDialog == null) {
             alertDialog = AlertDialog.Builder(this)
                 .setTitle("No Internet Connection")
                 .setMessage("Please check your internet connection and try again.")

@@ -1,6 +1,5 @@
 package com.example.bondoman.service.auth
 
-import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
@@ -10,6 +9,8 @@ import androidx.core.app.NotificationCompat
 import com.example.bondoman.R
 import com.example.bondoman.common.response.ResponseContract
 import com.example.bondoman.core.repository.auth.token.TokenRepository
+import com.example.bondoman.network.ConnectivityObserver
+import com.example.bondoman.network.NetworkConnectivityObserver
 import com.example.bondoman.share_preference.PreferenceManager
 import com.example.bondoman.ui.login.LoginActivity
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +27,7 @@ class TokenExpService : Service() {
     private lateinit var preferenceManager: PreferenceManager
 
     private lateinit var tokenRepository: TokenRepository
+    private lateinit var connectivityObserver: ConnectivityObserver
 
     private val job = Job()
     private val serviceScope = CoroutineScope(Dispatchers.Default + job)
@@ -46,6 +48,7 @@ class TokenExpService : Service() {
 
         preferenceManager = PreferenceManager(this)
         tokenRepository = TokenRepository()
+        connectivityObserver = NetworkConnectivityObserver(applicationContext)
     }
 
     enum class Actions {
@@ -60,13 +63,16 @@ class TokenExpService : Service() {
                 while (true) {
                     Log.d("Token Exp Service", "Start Timer")
                     delay(300000)
-                    val response = tokenRepository.getToken("Bearer $token")
-
-                    if (response is ResponseContract.Error) {
-                        preferenceManager.removePref()
-                        val intent = Intent(applicationContext, LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
+                    if (connectivityObserver.isConnected()) {
+                        redirectionChecking(token)
+                    }
+                    else {
+                        Log.d("Token Exp Service", "No network")
+                        connectivityObserver.observe().collect { status ->
+                            if(status == ConnectivityObserver.Status.Available) {
+                                redirectionChecking(token)
+                            }
+                        }
                     }
                 }
             }
@@ -79,6 +85,17 @@ class TokenExpService : Service() {
             .build()
 
         startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+    }
+
+    private suspend fun redirectionChecking(token: String) {
+        val response = tokenRepository.getToken("Bearer $token")
+
+        if (response is ResponseContract.Error) {
+            preferenceManager.removePref()
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {
