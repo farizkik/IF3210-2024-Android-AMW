@@ -42,7 +42,7 @@ import com.example.bondoman.lib.transaction.TRANSACTION_TYPE
 class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
     private var transactionId = 0L
     private val viewModel: TransactionViewModel by viewModels()
-    private var currentTransaction = Transaction("", "", 0L, 0L, "")
+    private var currentTransaction = Transaction("", "", 0L, 0L, "",0.0,0.0)
 
     private var _binding: FragmentTransactionBinding? = null
 
@@ -105,6 +105,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
 //        viewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
         arguments?.let {
             transactionId = TransactionFragmentArgs.fromBundle(it).transactionID
+            binding.titleView.setText(TransactionFragmentArgs.fromBundle(it).randomTitle)
         }
 
         if(transactionId != 0L){
@@ -125,6 +126,9 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
             Log.d("Observer", "Observer triggered with success")
             if(binding.titleView.text.toString() != "" && binding.nominalView.text.toString() != "") {
                 val time:Long = System.currentTimeMillis()
+                currentTransaction.location = binding.locationView.text.toString()
+                currentTransaction.latitude = curLocation.latitude
+                currentTransaction.longitude = curLocation.longitude
                 currentTransaction.title =binding.titleView.text.toString()
                 currentTransaction.nominal = binding.nominalView.text.toString().toLong()
                 if(currentTransaction.id == 0L){
@@ -174,7 +178,10 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
                 if(it.type == TRANSACTION_TYPE.PEMBELIAN.toString()){
                     binding.pengeluaranButton.setChecked(true)
                 }
-
+                binding.locationView.setText(it.location, TextView.BufferType.NORMAL)
+                curLocation = Location(it.location)
+                curLocation.latitude = it.latitude
+                curLocation.longitude = it.longitude
                 binding.nominalView.setText(it.nominal.toString(), TextView.BufferType.EDITABLE)
             }
 
