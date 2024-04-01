@@ -115,6 +115,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
             getLocation()
         }
         binding.pemasukanButton.setChecked(true)
+        currentTransaction.type = TRANSACTION_TYPE.PEMASUKAN.toString()
 
         binding.pemasukanButton.setOnClickListener{
             currentTransaction.type = TRANSACTION_TYPE.PEMASUKAN.toString()
@@ -127,8 +128,14 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
             if(binding.titleView.text.toString() != "" && binding.nominalView.text.toString() != "") {
                 val time:Long = System.currentTimeMillis()
                 currentTransaction.location = binding.locationView.text.toString()
-                currentTransaction.latitude = curLocation.latitude
-                currentTransaction.longitude = curLocation.longitude
+                if(this::curLocation.isInitialized) {
+                    currentTransaction.latitude = curLocation.latitude
+                    currentTransaction.longitude = curLocation.longitude
+                }
+                else{
+                    currentTransaction.latitude = 0.0
+                    currentTransaction.longitude = 0.0
+                }
                 currentTransaction.title =binding.titleView.text.toString()
                 currentTransaction.nominal = binding.nominalView.text.toString().toLong()
                 if(currentTransaction.id == 0L){
