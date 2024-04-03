@@ -101,4 +101,11 @@ dependencies {
     implementation("androidx.camera:camera-video:${cameraXVersion}")
     implementation("androidx.camera:camera-view:${cameraXVersion}")
     implementation("androidx.camera:camera-extensions:${cameraXVersion}")
+
+    // Use okhttp3
+    implementation("com.squareup.okhttp3:okhttp:4.7.2")
+
+    // Use Apache POI
+    implementation("com.github.SUPERCILEX.poi-android:poi:3.17")
+
 }
