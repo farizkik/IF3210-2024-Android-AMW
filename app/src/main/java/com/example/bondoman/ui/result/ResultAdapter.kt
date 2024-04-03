@@ -8,8 +8,6 @@ import com.example.bondoman.databinding.ItemTransactionBinding
 
 class ResultAdapter(var items: ArrayList<Item>): RecyclerView.Adapter<ResultAdapter.ResultHolder>() {
 
-    // TODO: Replace with new Binding
-
     inner class ResultHolder(val binding: ItemTransactionBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(get: Item) {
             binding.title.text = get.name

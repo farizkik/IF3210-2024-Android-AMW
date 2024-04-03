@@ -191,6 +191,7 @@ class SettingsFragment : Fragment() {
 
         var intent = Intent(Intent.ACTION_SEND)
             .setType("application/excel")
+            // TODO: Set recipient emails
             .putExtra(Intent.EXTRA_EMAIL, arrayOf("13521092@std.stei.itb.ac.id", "13521054@std.stei.itb.ac.id", "13521082@std.stei.itb.ac.id"))
             .putExtra(Intent.EXTRA_SUBJECT, "Data Transaksi")
             .putExtra(Intent.EXTRA_TEXT, "This email is generated automatically")
