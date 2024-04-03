@@ -15,5 +15,12 @@
     <string name="login_email_label">Email</string>
     <string name="signout">Logout</string>
     <string name="login_password_label">Password</string>
+    <string name="upload_result_text_view_retake_note">Retake Note?</string>
+    <string name="upload_result_button_yes">Yes</string>
+    <string name="upload_result_button_no">No</string>
+    <string name="settings_radio_button_xls">xls</string>
+    <string name="settings_radio_button_xlsx">xlsx</string>
+    <string name="settings_button_save_spreadsheets">Save as Spreadsheets</string>
+    <string name="settings_button_send_email">Send as Email</string>
 
 </resources>
