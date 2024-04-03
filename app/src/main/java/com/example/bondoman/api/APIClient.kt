@@ -2,6 +2,7 @@ package com.example.bondoman.api
 
 import com.example.bondoman.api.auth.login.LoginService
 import com.example.bondoman.api.auth.token.TokenService
+import com.example.bondoman.api.scan.UploadService
 import com.example.bondoman.common.Constant
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -20,5 +21,9 @@ object APIClient {
 
     val tokenService: TokenService by lazy {
         retrofit.create(TokenService::class.java)
+    }
+
+    val uploadService: UploadService by lazy {
+        retrofit.create(UploadService::class.java)
     }
 }

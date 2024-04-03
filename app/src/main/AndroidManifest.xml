@@ -57,6 +57,17 @@
         <service
             android:name=".service.auth.TokenExpService"
             android:foregroundServiceType="dataSync"/>
+
+        <provider
+            android:authorities="com.example.counter"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                />
+        </provider>
     </application>
 
 </manifest>

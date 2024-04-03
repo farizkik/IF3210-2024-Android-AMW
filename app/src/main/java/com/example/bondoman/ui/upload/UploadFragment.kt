@@ -1,47 +1,51 @@
-package com.example.bondoman.ui.home
+package com.example.bondoman.ui.upload
 
 import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.Recorder
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoCapture
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.bondoman.R
+import androidx.navigation.Navigation
+import com.example.bondoman.core.data.Item
+import com.example.bondoman.core.data.ParcelableItem
 import com.example.bondoman.databinding.FragmentHomeBinding
+import com.example.bondoman.share_preference.PreferenceManager
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import okhttp3.RequestBody.Companion.asRequestBody
 
-typealias LumaListener = (luma: Double) -> Unit
-
-class HomeFragment : Fragment() {
+class UploadFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private lateinit var preferenceManager: PreferenceManager
+
+    private lateinit var viewModel: UploadViewModel
+
+    private lateinit var file: File
 
     private var imageCapture: ImageCapture? = null
 
@@ -59,13 +63,20 @@ class HomeFragment : Fragment() {
         }
         if (!permissionGranted) {
             Toast.makeText(
-                requireContext(),
-                "Permission request denied",
-                Toast.LENGTH_SHORT
+                requireContext(), "Permission request denied", Toast.LENGTH_SHORT
             ).show()
         } else {
             startCamera()
         }
+    }
+
+    private fun goToUploadResultFragment() {
+        val items: Array<Item> = viewModel.items.value!!.items.toTypedArray()
+        val parcelableItem: Array<ParcelableItem> = items.map {
+            ParcelableItem(it.name, it.qty, it.price)
+        }.toTypedArray()
+        val action = UploadFragmentDirections.actionNavigationHomeToResultFragment(parcelableItem)
+        Navigation.findNavController(binding.cameraView).navigate(action)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +90,32 @@ class HomeFragment : Fragment() {
         }
 
         // Set up the listeners to take photo and video capture buttons
-        binding.imageCaptureButton.setOnClickListener { takePhoto() }
+        binding.imageCaptureButton.setOnClickListener {
+            takePhoto()
+
+            val mediaType = "image/jpeg"
+
+            val part = MultipartBody.Part.createFormData(
+                "file",
+                file.name,
+                file.asRequestBody(mediaType.toMediaType())
+            )
+
+            val token = preferenceManager.getToken()
+
+            viewModel.upload(token, part)
+        }
+
+        viewModel.uploadResponse.observe(viewLifecycleOwner) { res ->
+            Log.d("Upload Fragment", res.toString())
+            viewModel.setItems(res)
+
+            goToUploadResultFragment()
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { res ->
+            Log.d("Upload Fragment", res.toString())
+        }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
@@ -89,25 +125,18 @@ class HomeFragment : Fragment() {
         val imageCapture = imageCapture ?: return
 
         // Create time stamped name and MediaStory entry
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-            .format(System.currentTimeMillis())
+        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
         }
 
         // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(
-                requireContext().contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues
-            )
-            .build()
+        file = File.createTempFile("TEMP_FILE_", ".jpg", requireContext().cacheDir)
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
 
         // Set up image capture listener, which is triggered after photo has been taken
-        imageCapture.takePicture(
-            outputOptions,
+        imageCapture.takePicture(outputOptions,
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exception: ImageCaptureException) {
@@ -116,11 +145,14 @@ class HomeFragment : Fragment() {
 
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val msg = "Photo captured successfully: ${outputFileResults.savedUri}"
+
+                    // TODO: remove
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
+
+                    Log.d("Upload Fragment", file.name)
                 }
-            }
-        )
+            })
     }
 
     private fun startCamera() {
@@ -131,15 +163,13 @@ class HomeFragment : Fragment() {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
             // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(binding.cameraView.surfaceProvider)
-                }
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(binding.cameraView.surfaceProvider)
+            }
 
-            imageCapture = ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .build()
+            imageCapture =
+                ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                    .build()
 
             // Select back camera as default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -182,12 +212,14 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        preferenceManager = PreferenceManager(requireContext())
+
+        viewModel = ViewModelProvider(this).get(UploadViewModel::class.java)
 
         return root
     }

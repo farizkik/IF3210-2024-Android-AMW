@@ -1,10 +1,9 @@
-package com.example.bondoman.ui.settings
+package com.example.bondoman.ui.result
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.core.repository.TransactionRepository
 import com.example.bondoman.core.usecase.AddTransaction
@@ -16,12 +15,9 @@ import com.example.bondoman.framework.RoomTransactionDataSource
 import com.example.bondoman.framework.UseCases
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class SettingsViewModel(application: Application) : AndroidViewModel(application) {
-
+class ResultViewModel(application: Application) : AndroidViewModel(application){
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     val repository = TransactionRepository(RoomTransactionDataSource(application))
@@ -31,21 +27,31 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         GetTransaction(repository),
         GetAllTransaction(repository),
         RemoveTransaction(repository),
-        GetTransactionTypeCount(repository),
+        GetTransactionTypeCount(repository)
     )
 
-    val transactions = MutableLiveData<List<Transaction>>()
+    var saved = MutableLiveData<Boolean>()
+    val currentTransaction = MutableLiveData<Transaction?>()
 
-    fun getTransactions() {
+    fun saveTransaction(transaction: Transaction) {
         coroutineScope.launch {
-            val transactionList = useCases.getAllTransaction()
-            Log.d("Settings View Model", transactionList.toString())
-            transactions.postValue(transactionList)
-            Log.d("Settings View Model", transactions.value.toString())
+            useCases.addTransaction(transaction)
+            Log.d("chane", "Observer triggered with yippie")
+            saved.postValue(true)
         }
     }
 
-    fun setTransactions(transactionList: List<Transaction>) {
-        transactions.value = transactionList
+    fun getTransaction(id: Long){
+        coroutineScope.launch {
+            val transaction = useCases.getTransaction(id)
+            currentTransaction.postValue(transaction)
+        }
+    }
+
+    fun deleteTransaction(transaction: Transaction){
+        coroutineScope.launch {
+            useCases.removeTransaction(transaction)
+            saved.postValue(true)
+        }
     }
 }
