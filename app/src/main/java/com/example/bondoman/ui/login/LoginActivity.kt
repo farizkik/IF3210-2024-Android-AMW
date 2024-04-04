@@ -43,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
         connectivityObserver = NetworkConnectivityObserver(applicationContext)
 
         binding.button2.setOnClickListener {
+            binding.button2.isEnabled = false
             val email = binding.editTextTextEmailAddress.text.toString()
             val password = binding.editTextTextPassword.text.toString()
 
@@ -89,6 +90,8 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
+
+            binding.button2.isEnabled = true
         })
 
         viewModel.errorMessage.observe(this, Observer { res ->
@@ -104,6 +107,8 @@ class LoginActivity : AppCompatActivity() {
                 binding.editTextTextPassword.error = res.toString()
                 binding.editTextTextPassword.requestFocus()
             }
+
+            binding.button2.isEnabled = true
         })
     }
 
