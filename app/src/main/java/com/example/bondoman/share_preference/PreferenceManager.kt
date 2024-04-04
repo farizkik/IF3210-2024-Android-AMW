@@ -34,4 +34,13 @@ class PreferenceManager (var context: Context) {
         editor.clear()
         editor.commit()
     }
+
+    fun setEmail(email: String?) {
+        editor.putString("email", email)
+        editor.commit()
+    }
+
+    fun getEmail(): String? {
+        return pref.getString("email", "")
+    }
 }

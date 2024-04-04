@@ -72,6 +72,8 @@ class LoginActivity : AppCompatActivity() {
             Log.d("Login", loginRequest.email.toString())
             Log.d("Login", loginRequest.password.toString())
             viewModel.login(loginRequest)
+
+            preferenceManager.setEmail(loginRequest.email.toString())
         }
 
 
