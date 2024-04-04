@@ -8,8 +8,13 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/ic_baseline_photo_camera_24"
         android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_twibbon"
+        android:icon="@drawable/ic_outline_filter_frames_24"
+        android:title="Twibbon" />
 
     <item
         android:id="@+id/navigation_graph"
@@ -20,10 +25,5 @@
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings"
         android:title="Settings" />
-
-    <item
-        android:id="@+id/navigation_twibbon"
-        android:icon="@drawable/ic_outline_filter_frames_24"
-        android:title="Twibbon" />
 
 </menu>
