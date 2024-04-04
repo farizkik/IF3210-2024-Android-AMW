@@ -48,7 +48,7 @@ class ResultFragment : Fragment() {
                 sum += Item(it).price
             }
             val time:Long = System.currentTimeMillis()
-            tempTransaction.location = "Default"
+            tempTransaction.location = ""
             tempTransaction.latitude = 0.0
             tempTransaction.longitude = 0.0
             tempTransaction.title = "Transaction Scanned"
