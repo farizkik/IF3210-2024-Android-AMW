@@ -33,6 +33,12 @@
         tools:layout="@layout/fragment_graph" />
 
     <fragment
+        android:id="@+id/navigation_twibbon"
+        android:name="com.example.bondoman.ui.twibbon.TwibbonFragment"
+        android:label="@string/title_twibbon"
+        tools:layout="@layout/fragment_twibbon" />
+
+    <fragment
         android:id="@+id/transactionFragment"
         android:name="com.example.bondoman.ui.transaction.TransactionFragment"
         android:label="Transaction"

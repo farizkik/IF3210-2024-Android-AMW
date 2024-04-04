@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.twibbon.TwibbonFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/camera_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="100dp" />
+
+    <ImageView
+        android:id="@+id/image_overview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:contentDescription="@string/image_overview" />
+
+    <ImageView
+        android:id="@+id/twibbon_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        android:contentDescription="@string/twibbon_overlay" />
+
+    </RelativeLayout>
+
+
+    <ImageButton
+        android:id="@+id/capture_button"
+        android:layout_width="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_baseline_photo_camera_48"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/camera_image_description"
+        />
+
+</FrameLayout>

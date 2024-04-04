@@ -21,4 +21,9 @@
         android:icon="@drawable/ic_settings"
         android:title="Settings" />
 
+    <item
+        android:id="@+id/navigation_twibbon"
+        android:icon="@drawable/ic_outline_filter_frames_24"
+        android:title="Twibbon" />
+
 </menu>
