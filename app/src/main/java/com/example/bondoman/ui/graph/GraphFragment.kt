@@ -7,18 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.charts.Pie
-import com.example.bondoman.R
 import com.example.bondoman.databinding.FragmentGraphBinding
+import kotlinx.coroutines.launch
 
 class GraphFragment: Fragment() {
 
     private lateinit var anyChartView: AnyChartView;
 
     private var _binding: FragmentGraphBinding? = null
+
+    private lateinit var graphViewModel: GraphViewModel
+
+    private var pie: Pie? = null
 
     private val binding get() = _binding!!
 
@@ -27,24 +33,37 @@ class GraphFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val graphViewModel = ViewModelProvider(this).get(GraphViewModel::class.java)
-        graphViewModel.getCountTypeData()
+        graphViewModel = ViewModelProvider(this).get(GraphViewModel::class.java)
 
         _binding = FragmentGraphBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         anyChartView = binding.graphChartFragment
-        graphViewModel.countData.observe(viewLifecycleOwner) { dataEntries ->
-            setupChartView(dataEntries)
-        }
+        pie= AnyChart.pie()
+
 
         return root
     }
 
-    private fun setupChartView(dataEntries: List<DataEntry>) {
-        val pie: Pie = AnyChart.pie()
-        pie.data(dataEntries)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.launch {
+            val (pemasukan, pembelian) = graphViewModel.getCountTypeData()
+            Log.d("Graph Fragment", "$pemasukan, $pembelian")
+            updateChart(pemasukan, pembelian)
+        }
 
+    }
+
+    private fun updateChart(pemasukanCount: Int, pembelianCount: Int){
+        Log.d("Graph Fragment", "$pemasukanCount and $pembelianCount")
+        val dataEntries: List<DataEntry> = listOf(
+            ValueDataEntry("Pemasukan", pemasukanCount),
+            ValueDataEntry("Pembelian", pembelianCount)
+        )
+
+
+        pie!!.data(dataEntries)
         anyChartView.setChart(pie)
     }
 
