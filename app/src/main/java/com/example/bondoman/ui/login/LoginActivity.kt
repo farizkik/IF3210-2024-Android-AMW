@@ -50,21 +50,32 @@ class LoginActivity : AppCompatActivity() {
             if(email.isEmpty() || email == "") {
                 binding.editTextTextEmailAddress.error = "Email is required"
                 binding.editTextTextEmailAddress.requestFocus()
+                binding.button2.isEnabled = true
                 return@setOnClickListener
             } else if (!email.matches(emailPattern)) {
                 binding.editTextTextEmailAddress.error = "Invalid email format"
                 binding.editTextTextEmailAddress.requestFocus()
+                binding.button2.isEnabled = true
                 return@setOnClickListener
             }
 
             if(password.isEmpty() || password == "") {
                 binding.editTextTextPassword.error = "Password is required"
                 binding.editTextTextPassword.requestFocus()
+                binding.button2.isEnabled = true
+                return@setOnClickListener
+            }
+
+            if(password.length < 8) {
+                binding.editTextTextPassword.error = "Password must contain at least 8 character(s)"
+                binding.editTextTextPassword.requestFocus()
+                binding.button2.isEnabled = true
                 return@setOnClickListener
             }
 
             if(!connectivityObserver.isConnected()) {
                 Toast.makeText(this@LoginActivity, "Please connect to a network", Toast.LENGTH_SHORT).show()
+                binding.button2.isEnabled = true
                 return@setOnClickListener
             }
 
@@ -96,19 +107,19 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.errorMessage.observe(this, Observer { res ->
             Log.d("Login", res.toString())
+            binding.button2.isEnabled = true
             if (res.toString() == "Invalid email") {
                 binding.editTextTextEmailAddress.error = res.toString()
                 binding.editTextTextPassword.setText("")
                 binding.editTextTextEmailAddress.requestFocus()
                 binding.editTextTextPassword.error = null
-            }
-
-            if (res.toString() == "Invalid password") {
+            } else if (res.toString() == "Invalid password") {
                 binding.editTextTextPassword.error = res.toString()
                 binding.editTextTextPassword.requestFocus()
             }
 
             binding.button2.isEnabled = true
+
         })
     }
 
