@@ -22,5 +22,9 @@
     <string name="settings_radio_button_xlsx">xlsx</string>
     <string name="settings_button_save_spreadsheets">Save as Spreadsheets</string>
     <string name="settings_button_send_email">Send as Email</string>
+    <string name="title_twibbon">Twibbon</string>
+    <string name="camera_image_description">Capture picture</string>
+    <string name="image_overview">Image Overview</string>
+    <string name="twibbon_overlay">twibbon overlay</string>
 
 </resources>
