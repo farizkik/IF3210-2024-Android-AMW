@@ -64,8 +64,12 @@ class TransactionMenuFragment : Fragment(), ListAction, MyBroadcastListener {
         viewModel.transactions.observe(viewLifecycleOwner, Observer {transactionsList->
             binding.loadingView.visibility = View.GONE
             binding.transactionListView.visibility = View.VISIBLE
-            transactionMenuAdapter.updateTransactions(transactionsList.sortedBy { it.creationTime })
-
+            transactionMenuAdapter.updateTransactions(transactionsList.sortedBy { -it.creationTime })
+            if(transactionsList.isEmpty()) {
+                binding.textView2.visibility = View.VISIBLE
+            } else{
+                binding.textView2.visibility = View.INVISIBLE
+            }
         })
     }
 
