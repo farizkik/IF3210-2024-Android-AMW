@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView android:id="@+id/transactionLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/transactionLayout"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="120dp"
+    android:orientation="vertical"
     app:cardCornerRadius="5dp"
     app:cardElevation="2dp"
-    app:cardUseCompatPadding="true"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,20 +20,20 @@
             style="@style/Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:maxLines="1"
+            android:text="Title"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/content"
             style="@style/Text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Content"
-            android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/title"/>
+            android:maxLines="1"
+            android:text="Content"
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
         <TextView
             android:id="@+id/date"
@@ -40,7 +41,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Last updated"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/nominal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Nominal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/content" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

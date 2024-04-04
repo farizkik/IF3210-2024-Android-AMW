@@ -15,6 +15,7 @@ class TransactionMenuAdapter(var transactions : ArrayList<Transaction>, val acti
         fun bind(get: Transaction){
             binding.title.text = get.title
             binding.content.text = get.type
+            binding.nominal.text = get.nominal.toString()
 
             val sdf = SimpleDateFormat("MMM dd, HH:mm:ss")
             val resultDate = Date(get.creationTime)

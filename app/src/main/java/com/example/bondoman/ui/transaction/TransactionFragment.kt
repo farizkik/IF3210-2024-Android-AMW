@@ -34,9 +34,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.bondoman.R
+import com.example.bondoman.api.auth.login.dto.LoginRequest
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.databinding.FragmentTransactionBinding
 import com.example.bondoman.lib.transaction.TRANSACTION_TYPE
+import okhttp3.MediaType
+import java.io.File
 
 
 class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
@@ -73,40 +76,42 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                menuInflater.inflate(R.menu.transaction_menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
-                when (menuItem.itemId) {
-                    R.id.deleteTransaction -> {
-                        if(context != null && transactionId != 0L){
-                            AlertDialog.Builder(context!!)
-                                .setTitle("Delete Transaction")
-                                .setMessage("Are you sure you want to delete this transaction?")
-                                .setPositiveButton("Yes") {dialogInterface ,i ->
-                                    viewModel.deleteTransaction(currentTransaction)
-                                }
-                                .setNegativeButton("Cancel"){dialogInterface ,i ->}
-                                .create()
-                                .show()
-                        }
-
-                    }
-                }
-                return true
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-//        viewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
         arguments?.let {
             transactionId = TransactionFragmentArgs.fromBundle(it).transactionID
             binding.titleView.setText(TransactionFragmentArgs.fromBundle(it).randomTitle)
         }
+        if(transactionId != 0L) {
+            val menuHost: MenuHost = requireActivity()
+            menuHost.addMenuProvider(object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    // Add menu items here
+                    menuInflater.inflate(R.menu.transaction_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    // Handle the menu selection
+                    when (menuItem.itemId) {
+                        R.id.deleteTransaction -> {
+                            if (context != null && transactionId != 0L) {
+                                AlertDialog.Builder(context!!)
+                                    .setTitle("Delete Transaction")
+                                    .setMessage("Are you sure you want to delete this transaction?")
+                                    .setPositiveButton("Yes") { dialogInterface, i ->
+                                        viewModel.deleteTransaction(currentTransaction)
+                                    }
+                                    .setNegativeButton("Cancel") { dialogInterface, i -> }
+                                    .create()
+                                    .show()
+                            }
+
+                        }
+                    }
+                    return true
+                }
+            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        }
+//        viewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
+
 
         if(transactionId != 0L){
             viewModel.getTransaction(transactionId)
@@ -123,8 +128,36 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
         binding.pengeluaranButton.setOnClickListener {
             currentTransaction.type = TRANSACTION_TYPE.PEMBELIAN.toString()
         }
+
+
+
         binding.saveButton.setOnClickListener{
-            Log.d("Observer", "Observer triggered with success")
+            if(binding.titleView.text.toString().trim() == ""){
+                binding.titleView.error = "Title is required"
+                binding.titleView.requestFocus()
+                return@setOnClickListener
+            }
+            if(!binding.titleView.text.toString().matches(Regex("[a-zA-Z0-9 _-]*"))){
+                binding.titleView.error = "Title can only be alphanumeric with spaces, -, and _"
+                binding.titleView.requestFocus()
+                return@setOnClickListener
+            }
+            if(binding.titleView.text.toString().length > 255){
+                binding.titleView.error = "Title is maxed at 255 characters"
+                binding.titleView.requestFocus()
+                return@setOnClickListener
+            }
+            if(binding.nominalView.text.toString() ==""){
+                binding.nominalView.error = "Nominal is required"
+                binding.nominalView.requestFocus()
+                return@setOnClickListener
+            }
+            if(binding.nominalView.text.toString().length > 12){
+                binding.nominalView.error = "Nominal is too big"
+                binding.nominalView.requestFocus()
+                return@setOnClickListener
+            }
+
             if(binding.titleView.text.toString() != "" && binding.nominalView.text.toString() != "") {
                 val time:Long = System.currentTimeMillis()
                 currentTransaction.location = binding.locationView.text.toString()
@@ -136,7 +169,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
                     currentTransaction.latitude = 0.0
                     currentTransaction.longitude = 0.0
                 }
-                currentTransaction.title =binding.titleView.text.toString()
+                currentTransaction.title =binding.titleView.text.toString().trim()
                 currentTransaction.nominal = binding.nominalView.text.toString().toLong()
                 if(currentTransaction.id == 0L){
                     currentTransaction.creationTime = time
@@ -147,8 +180,11 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
             Navigation.findNavController(it).popBackStack()
         }
         binding.mapsButton.setOnClickListener{
-            if(this::curLocation.isInitialized)
+            if(this::curLocation.isInitialized && binding.locationView.text.toString() != "")
                 openMapsIntent(curLocation.latitude, curLocation.longitude)
+            else{
+                Toast.makeText(context, "No location selected", Toast.LENGTH_SHORT).show()
+            }
         }
 
     }
@@ -206,7 +242,6 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
             PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, "Permission Granted lol?", Toast.LENGTH_SHORT).show()
 //            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
         } else {
             Log.d("ples]aes","request pleasesaesee")
@@ -237,10 +272,10 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
             PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, "Permission Granted lol?", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Fetching location...", Toast.LENGTH_SHORT).show()
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
         } else {
-
+            Toast.makeText(context, "Location not permitted", Toast.LENGTH_SHORT).show()
         }
 
     }

@@ -234,6 +234,11 @@ class SettingsFragment : Fragment() {
             "org.apache.poi.javax.xml.stream.XMLEventFactory",
             "com.fasterxml.aalto.stax.EventFactoryImpl"
         )
+        binding.randomizeButton.setOnClickListener {
+            val intent = Intent("com.example.bondoman.action")
+            intent.putExtra("message", "hello")
+            requireContext().sendBroadcast(intent)
+        }
 
         // Save spreadsheets
         binding.settingsButtonSaveSpreadsheet.setOnClickListener {

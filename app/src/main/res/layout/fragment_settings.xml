@@ -37,9 +37,9 @@
         android:layout_height="wrap_content"
         android:text="@string/signout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.069"
+        app:layout_constraintHorizontal_bias="0.072"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_button_send_email" />
+        app:layout_constraintTop_toBottomOf="@+id/randomizeButton" />
 
     <Button
         android:id="@+id/settings_button_send_email"
@@ -63,5 +63,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.237" />
+
+    <Button
+        android:id="@+id/randomizeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RANDOMIZE TRANSACTION"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.132"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_button_send_email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,6 @@ class RoomTransactionDataSource(context: Context) : TransactionDataSource {
     val transactionDao = DatabaseService.getInstance(context).transactionDao()
     init {
         CoroutineScope(Dispatchers.IO).launch {
-            seedDatabase(context)
         }
     }
 
