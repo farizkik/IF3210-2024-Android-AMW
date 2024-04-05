@@ -157,6 +157,11 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
                 binding.nominalView.requestFocus()
                 return@setOnClickListener
             }
+            if(!binding.titleView.text.toString().matches(Regex("[0-9]*"))){
+                binding.titleView.error = "Nominal must be integer"
+                binding.titleView.requestFocus()
+                return@setOnClickListener
+            }
 
             if(binding.titleView.text.toString() != "" && binding.nominalView.text.toString() != "") {
                 val time:Long = System.currentTimeMillis()
@@ -203,10 +208,8 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
         viewModel.saved.observe(viewLifecycleOwner, Observer<Boolean> {it->
             Log.d("Observer", "Observer triggered with yippie")
             if(it) {
-                Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show()
                 Navigation.findNavController(binding.titleView).popBackStack()
             } else{
-                Toast.makeText(context, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show()
             }
         }
         )
@@ -254,7 +257,6 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
                 when {
                     permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
                         // Precise location access granted.
-                        Toast.makeText(context, "yippie!!!", Toast.LENGTH_SHORT).show()
                     }
                     permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                         // Only approximate location access granted.
