@@ -43,9 +43,12 @@ class ResultFragment : Fragment() {
             items = ResultFragmentArgs.fromBundle(it).items.toList()
             val temp = ArrayList<Item>()
             var sum = 0.0
+
             items.forEach(){
                 temp.add(Item(it))
-                sum += Item(it).price
+                val price = Item(it).price.toString().toDouble()
+                val normalized = (price * 1000).toLong()
+                sum += normalized
             }
             val time:Long = System.currentTimeMillis()
             tempTransaction.location = ""

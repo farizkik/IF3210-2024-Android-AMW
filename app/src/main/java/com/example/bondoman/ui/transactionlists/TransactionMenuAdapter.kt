@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.databinding.ItemTransactionBinding
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class TransactionMenuAdapter(var transactions : ArrayList<Transaction>, val action: ListAction) : RecyclerView.Adapter<TransactionMenuAdapter.TransactionViewHolder>(){
 
@@ -15,7 +17,10 @@ class TransactionMenuAdapter(var transactions : ArrayList<Transaction>, val acti
         fun bind(get: Transaction){
             binding.title.text = get.title
             binding.content.text = get.type
-            binding.nominal.text = get.nominal.toString()
+            val num = get.nominal.toString().toLong()
+            val formatter = NumberFormat.getInstance(Locale.getDefault())
+            val formattedNumber = "Rp " + formatter.format(num)
+            binding.nominal.text = formattedNumber
 
             val sdf = SimpleDateFormat("MMM dd, HH:mm:ss")
             val resultDate = Date(get.creationTime)

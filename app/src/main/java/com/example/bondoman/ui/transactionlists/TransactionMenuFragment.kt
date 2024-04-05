@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bondoman.databinding.FragmentListBinding
 import com.example.bondoman.receiver.MyBroadcastListener
 import com.example.bondoman.receiver.MyBroadcastReceiver
+import kotlin.random.Random
 
 
 class TransactionMenuFragment : Fragment(), ListAction, MyBroadcastListener {
@@ -49,7 +50,8 @@ class TransactionMenuFragment : Fragment(), ListAction, MyBroadcastListener {
 
         binding.addTransaction.setOnClickListener{
             if(toggle) {
-                goToTransactionDetails(0L, "Random")
+                val randomNumber = Random.nextInt(1, 101)
+                goToTransactionDetails(0L, "Random transaction $randomNumber")
                 toggle = false
             }
                 else
