@@ -37,7 +37,7 @@ Saat ini, Bondowoso menginginkan aplikasi tersebut dapat berjalan di gawai yang 
 
 | Name                                              | Features                                                                         | Exploration hours | Working Hours |
 |---------------------------------------------------|----------------------------------------------------------------------------------|-------------------|---------------|
-| [Yudi Kurniawan](https://github.com/frankiehuangg)| Login                                                                            |                   |               |
+| [Yudi Kurniawan](https://github.com/frankiehuangg)| Login                                                                            | 4                 | 8             |
 | [Wilson Tansil](https://github.com/Tansil011019)  | Login; Logout; JWT Service; Graph; Network Sensing; Twibbon                      | 5                 | 20            |
 | [Farizki Kurniawan](https://github.com/farizkik)  | Header and Navbar; Transaction CRUD; Transaction List; Broadcast Receiver        | 5                 | 20            |
 | [Frankie Huang](https://github.com/frankiehuangg) | Note Scanning; Export Transaction to Spreadsheets; Send Transaction with Gmail   | 8                 | 8             |
