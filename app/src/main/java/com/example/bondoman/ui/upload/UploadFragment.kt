@@ -238,6 +238,7 @@ class UploadFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if(::cameraExecutor.isInitialized)
         cameraExecutor.shutdown()
     }
 
