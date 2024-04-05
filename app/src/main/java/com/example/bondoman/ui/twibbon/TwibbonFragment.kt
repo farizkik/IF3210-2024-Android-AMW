@@ -137,7 +137,6 @@ class TwibbonFragment : Fragment() {
 
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val msg = "Photo captured successfully: ${outputFileResults.savedUri}"
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                     Log.d("Twibbon Fragment", msg)
                     displayCapturedImage(outputFileResults.savedUri!!)
                 }
