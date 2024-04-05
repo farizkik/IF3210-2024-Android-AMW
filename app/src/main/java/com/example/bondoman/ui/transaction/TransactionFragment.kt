@@ -157,9 +157,9 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
                 binding.nominalView.requestFocus()
                 return@setOnClickListener
             }
-            if(!binding.titleView.text.toString().matches(Regex("[0-9]*"))){
-                binding.titleView.error = "Nominal must be integer"
-                binding.titleView.requestFocus()
+            if(!binding.nominalView.text.toString().matches(Regex("[0-9]*"))){
+                binding.nominalView.error = "Nominal must be integer"
+                binding.nominalView.requestFocus()
                 return@setOnClickListener
             }
 
