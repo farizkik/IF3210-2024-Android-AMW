@@ -1,15 +1,15 @@
 package com.example.bondoman.ui.upload
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -27,11 +27,10 @@ import com.example.bondoman.share_preference.PreferenceManager
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.FileOutputStream
 
 class UploadFragment : Fragment() {
 
@@ -70,6 +69,39 @@ class UploadFragment : Fragment() {
         }
     }
 
+    private val pickMedia = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            Log.d("Upload Fragment", "Selected uri: $uri")
+
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+
+            file = File.createTempFile("TEMP_FILE_", ".jpg", requireContext().cacheDir)
+            val outputStream = FileOutputStream(file)
+
+            inputStream!!.use { input ->
+                outputStream.use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            val mediaType = "image/jpeg"
+
+            val part = MultipartBody.Part.createFormData(
+                "file",
+                file.name,
+                file.asRequestBody(mediaType.toMediaType())
+            )
+
+            val token = preferenceManager.getToken()
+
+            viewModel.upload(token, part)
+        } else {
+            Log.d("Upload Fragment", "No media selected")
+        }
+    }
+
     private fun goToUploadResultFragment() {
         val items: Array<Item> = viewModel.items.value!!.items.toTypedArray()
         val parcelableItem: Array<ParcelableItem> = items.map {
@@ -89,7 +121,12 @@ class UploadFragment : Fragment() {
             requestPermissions()
         }
 
-        // Set up the listeners to take photo and video capture buttons
+        // Set up the listeners to pick image
+        binding.scanImagePickerButton.setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        // Set up the listeners to take photo
         binding.imageCaptureButton.setOnClickListener {
             takePhoto()
 
@@ -115,6 +152,16 @@ class UploadFragment : Fragment() {
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { res ->
             Log.d("Upload Fragment", res.toString())
+
+            if (res.toString() == "Unauthorized") {
+                Toast.makeText(
+                    requireContext(), "Token has expired, please log in again", Toast.LENGTH_LONG
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(), "Server unreachable, please try again", Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -123,13 +170,6 @@ class UploadFragment : Fragment() {
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use cases
         val imageCapture = imageCapture ?: return
-
-        // Create time stamped name and MediaStory entry
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-        }
 
         // Create output options object which contains file + metadata
         file = File.createTempFile("TEMP_FILE_", ".jpg", requireContext().cacheDir)
@@ -140,16 +180,14 @@ class UploadFragment : Fragment() {
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exception: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
+                    Log.e(
+                        "Upload Fragment",
+                        "Photo capture failed: ${exception.message}",
+                        exception
+                    )
                 }
 
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val msg = "Photo captured successfully: ${outputFileResults.savedUri}"
-
-                    // TODO: remove
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
-
                     Log.d("Upload Fragment", file.name)
                 }
             })
@@ -183,7 +221,7 @@ class UploadFragment : Fragment() {
                     this, cameraSelector, preview, imageCapture
                 )
             } catch (exception: Exception) {
-                Log.e(TAG, "Use case binding failed", exception)
+                Log.e("Upload Fragment", "Use case binding failed", exception)
             }
         }, ContextCompat.getMainExecutor(requireContext()))
     }
@@ -204,11 +242,17 @@ class UploadFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "BONDOMAN"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private val REQUIRED_PERMISSIONS = mutableListOf(
             Manifest.permission.CAMERA
-        ).toTypedArray()
+        ).apply {
+            add(
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                } else {
+                    Manifest.permission.READ_MEDIA_IMAGES
+                }
+            )
+        }.toTypedArray()
     }
 
     override fun onCreateView(
