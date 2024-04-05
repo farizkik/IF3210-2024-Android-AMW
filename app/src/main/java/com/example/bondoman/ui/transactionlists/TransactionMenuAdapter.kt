@@ -26,6 +26,7 @@ class TransactionMenuAdapter(var transactions : ArrayList<Transaction>, val acti
             val resultDate = Date(get.creationTime)
             binding.date.text = "Created:       ${sdf.format(resultDate)}"
             binding.transactionLayout.setOnClickListener{action.onClick(get.id)}
+            binding.locationText.text = get.location
         }
 
     }
