@@ -2,7 +2,6 @@ package com.example.bondoman.ui.transaction
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -28,18 +27,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.bondoman.R
-import com.example.bondoman.api.auth.login.dto.LoginRequest
 import com.example.bondoman.core.data.Transaction
 import com.example.bondoman.databinding.FragmentTransactionBinding
 import com.example.bondoman.lib.transaction.TRANSACTION_TYPE
-import okhttp3.MediaType
-import java.io.File
 
 
 class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
@@ -48,7 +45,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
     private var currentTransaction = Transaction("", "", 0L, 0L, "",0.0,0.0)
 
     private var _binding: FragmentTransactionBinding? = null
-
+    private var isAvailable = false;
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -58,10 +55,15 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
         super.onCreate(savedInstanceState)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        this.isAvailable = false
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        this.isAvailable = true
         // Inflate the layout for this fragment
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -304,6 +306,7 @@ class TransactionFragment : Fragment(), LocationListener, GeocodeListener {
 
     private lateinit var geocoder: Geocoder
     override fun onGeocode(p0: MutableList<Address>) {
+        if(this.isAvailable)
         tvGpsLocation.text = p0[0].getAddressLine(0).toString()
     }
 
