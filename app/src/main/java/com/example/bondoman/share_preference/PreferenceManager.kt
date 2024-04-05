@@ -12,8 +12,8 @@ class PreferenceManager (var context: Context) {
     var pref:SharedPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
     var editor:SharedPreferences.Editor = pref.edit()
 
-    fun setLogin(isLogin: Boolean) {
-        editor.putBoolean(IS_LOGIN, isLogin)
+    fun setLogin() {
+        editor.putBoolean(IS_LOGIN, true)
         editor.commit()
     }
 

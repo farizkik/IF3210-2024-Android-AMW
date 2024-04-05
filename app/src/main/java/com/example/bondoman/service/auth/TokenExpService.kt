@@ -2,11 +2,8 @@ package com.example.bondoman.service.auth
 
 import android.app.Service
 import android.content.Intent
-import android.content.pm.ServiceInfo
 import android.os.IBinder
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import com.example.bondoman.R
 import com.example.bondoman.common.response.ResponseContract
 import com.example.bondoman.core.repository.auth.token.TokenRepository
 import com.example.bondoman.network.ConnectivityObserver
@@ -58,18 +55,22 @@ class TokenExpService : Service() {
     private fun start() {
         val token = preferenceManager.getToken()
 
+        Log.d("Token Exp Service", "Start")
+
         if (!token.isNullOrEmpty()) {
             serviceScope.launch {
-                while (true) {
+
+                val isLogin = preferenceManager.isLogin()
+
+                if(isLogin) {
                     Log.d("Token Exp Service", "Start Timer")
                     delay(300000)
                     if (connectivityObserver.isConnected()) {
                         redirectionChecking(token)
-                    }
-                    else {
+                    } else {
                         Log.d("Token Exp Service", "No network")
                         connectivityObserver.observe().collect { status ->
-                            if(status == ConnectivityObserver.Status.Available) {
+                            if (status == ConnectivityObserver.Status.Available) {
                                 redirectionChecking(token)
                             }
                         }
@@ -78,13 +79,13 @@ class TokenExpService : Service() {
             }
         }
 
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Token Check Service Is Active")
-            .setContentText("Checking JWT Token Expiration")
-            .build()
-
-        startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+//        val notification = NotificationCompat.Builder(this, channelId)
+//            .setSmallIcon(R.drawable.ic_launcher_foreground)
+//            .setContentTitle("Token Check Service Is Active")
+//            .setContentText("Checking JWT Token Expiration")
+//            .build()
+//
+//        startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
     }
 
     private suspend fun redirectionChecking(token: String) {

@@ -92,6 +92,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginResponse.observe(this, Observer { res ->
             Log.d("Login", res.toString())
             preferenceManager.setToken(res.token)
+            preferenceManager.setLogin()
 
             Intent(applicationContext, TokenExpService::class.java).also {
                 it.action = TokenExpService.Actions.START.toString()
