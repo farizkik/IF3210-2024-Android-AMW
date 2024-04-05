@@ -3,7 +3,9 @@ package com.example.bondoman.ui.transactionlists
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -102,8 +104,14 @@ class TransactionMenuFragment : Fragment(), ListAction, MyBroadcastListener {
         super.onCreate(savedInstanceState)
 
         receiver = MyBroadcastReceiver(this)
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        } else {
+            0 // For versions below Android 13, there's no export flag
+        }
         val intentFilter = IntentFilter("com.example.bondoman.action")
-        requireContext().registerReceiver(receiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        
+        requireContext().registerReceiver(receiver, intentFilter, Context.RECEIVER_EXPORTED)
 
     }
     override fun onBroadcastReceived(value: String?) {
