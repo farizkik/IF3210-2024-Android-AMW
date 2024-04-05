@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">BondoMan</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="take_photo">Take a picture</string>
+    <string name="title_graph">Graph</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="network_offline_title">No Internet Connection</string>
+    <string name="network_offline_subtitle">Please Reconnect to Internet</string>
+    <string name="network_offline_image_description">Network Offline Image</string>
+    <string name="network_retry_button">Retry</string>
+    <string name="login">Login</string>
+    <string name="login_email_label">Email</string>
+    <string name="signout">Logout</string>
+    <string name="login_password_label">Password</string>
+    <string name="upload_result_text_view_retake_note">Retake Note?</string>
+    <string name="upload_result_button_yes">Yes</string>
+    <string name="upload_result_button_no">No</string>
+    <string name="settings_radio_button_xls">xls</string>
+    <string name="settings_radio_button_xlsx">xlsx</string>
+    <string name="settings_button_save_spreadsheets">Save as Spreadsheets</string>
+    <string name="settings_button_send_email">Send as Email</string>
+    <string name="title_twibbon">Twibbon</string>
+    <string name="camera_image_description">Capture picture</string>
+    <string name="image_overview">Image Overview</string>
+    <string name="twibbon_overlay">twibbon overlay</string>
+    <string name="scan_image_picker_button">Pick Image</string>
+
+</resources>
